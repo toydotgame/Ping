@@ -1,0 +1,21 @@
+name: Ping
+main: io.github.toydotgame.Ping.Main
+version: 0.1
+description: An optimised plugin to get one's ping.
+author: toydotgame
+prefix: Ping
+commands:
+   ping:
+      description: Get your (or someone else's) ping.
+      usage: "Usage: /ping [playername]"
+permissions:
+   ping.all:
+      children:
+         ping.use: true
+         ping.others: true
+   ping.use:
+      description: Allows a player to check ping.
+      default: true
+   ping.others:
+      description: Allows a player to see another player's ping.
+      default: true
