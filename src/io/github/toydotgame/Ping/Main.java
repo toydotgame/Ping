@@ -1,11 +1,11 @@
 package io.github.toydotgame.Ping;
 
-import org.bukkit.Bukkit;
+import java.lang.reflect.InvocationTargetException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,7 +53,13 @@ public class Main extends JavaPlugin implements CommandExecutor {
 	private void getPing(CommandSender sender, Command command, String label, String[] args, Player playerSender, Player selectedPlayer) {
 		Thread getPingThread = new Thread() {
 			public void run() {
-				int ping = ((CraftPlayer) selectedPlayer).getHandle().ping;
+				// int ping = ((CraftPlayer) selectedPlayer).getHandle().ping; // Will only work for 1.6.4.
+				int ping = 0;
+				try {
+					Object entityPlayer = selectedPlayer.getClass().getMethod("getHandle").invoke(selectedPlayer);
+					ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
+				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {}
+				
 				if(selectedPlayer == playerSender) {
 					sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
 				} else {
