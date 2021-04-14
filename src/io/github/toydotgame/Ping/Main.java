@@ -59,14 +59,10 @@ public class Main extends JavaPlugin implements CommandExecutor {
 					ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
 				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {}
 				
-				if(ping != 0) {
-					if(selectedPlayer == playerSender) {
-						sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
-					} else {
-						sender.sendMessage("The ping of " + args[0] + " is " + String.valueOf(ping) + "ms.");
-					}
+				if(selectedPlayer == playerSender) {
+					sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
 				} else {
-					sender.sendMessage(ChatColor.RED + "An error occurred, and no ping time could be found.");
+					sender.sendMessage("The ping of " + args[0] + " is " + String.valueOf(ping) + "ms.");
 				}
 			}
 		};
