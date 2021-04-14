@@ -7,7 +7,7 @@ prefix: Ping
 commands:
    ping:
       description: Get your (or someone else's) ping.
-      usage: "Usage: /ping [playername]"
+      usage: "Usage: /<command> [playername]"
 permissions:
    ping.all:
       children:
