@@ -53,17 +53,20 @@ public class Main extends JavaPlugin implements CommandExecutor {
 	private void getPing(CommandSender sender, Command command, String label, String[] args, Player playerSender, Player selectedPlayer) {
 		Thread getPingThread = new Thread() {
 			public void run() {
-				// int ping = ((CraftPlayer) selectedPlayer).getHandle().ping; // Will only work for 1.6.4.
 				int ping = 0;
 				try {
 					Object entityPlayer = selectedPlayer.getClass().getMethod("getHandle").invoke(selectedPlayer);
 					ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
 				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {}
 				
-				if(selectedPlayer == playerSender) {
-					sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
+				if(ping != 0) {
+					if(selectedPlayer == playerSender) {
+						sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
+					} else {
+						sender.sendMessage("The ping of " + args[0] + " is " + String.valueOf(ping) + "ms.");
+					}
 				} else {
-					sender.sendMessage("The ping of " + args[0] + " is " + String.valueOf(ping) + "ms.");
+					sender.sendMessage(ChatColor.RED + "An error occurred, and no ping time could be found.");
 				}
 			}
 		};
