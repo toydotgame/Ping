@@ -23,11 +23,16 @@ public class Main extends JavaPlugin implements CommandExecutor {
 					getPing(sender, command, label, args, playerSender, playerSender);
 					return true;
 				} else if(args.length == 1) {
-					if(getServer().getPlayerExact(args[0]) != null) {
-						getPing(sender, command, label, args, playerSender, getServer().getPlayer(args[0]));
-						return true;
+					if(playerSender.hasPermission("ping.others")) {
+						if(getServer().getPlayerExact(args[0]) != null) {
+							getPing(sender, command, label, args, playerSender, getServer().getPlayer(args[0]));
+							return true;
+						} else {
+							sender.sendMessage(ChatColor.RED + "The player \"" + args[0] + "\" could not be found!");
+							return true;
+						}
 					} else {
-						sender.sendMessage(ChatColor.RED + "The player \"" + args[0] + "\" could not be found!");
+						sender.sendMessage(ChatColor.RED + "You have insufficient permissions to ping other players!");
 						return true;
 					}
 				} else {
