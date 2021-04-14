@@ -1,49 +1,51 @@
 package io.github.toydotgame.Ping;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin {	
+public class Main extends JavaPlugin implements CommandExecutor {
 	@Override
 	public void onEnable() {
-		this.getCommand("ping").setExecutor(this);
-		System.out.print("[Ping] Plugin loaded successfully!");
+		System.out.print("[Ping] Plugin successfully loaded!");
 	}
 	
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(sender instanceof Player) {
-			Player player = (Player) sender;
-			if(args.length == 0) {
-				pingGetter(sender, player, player, args[0]);
-				return true;
-			} else if(args.length == 1) {
-				pingGetter(sender, player, getServer().getPlayer(args[0]), args[0]);
-				return true;
+		Player playerSender = (Player) sender;
+			if(playerSender.hasPermission("ping.use")) {
+				if(args.length == 0) {
+					getPing(sender, command, label, args, playerSender, playerSender);
+					return true;
+				} else if(args.length == 1) {
+					if(getServer().getPlayerExact(args[0]) != null) {
+						getPing(sender, command, label, args, playerSender, getServer().getPlayer(args[0]));
+						return true;
+					} else {
+						sender.sendMessage(ChatColor.RED + "The player \"" + args[0] + "\" could not be found!");
+						return true;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Invalid argument amount!");
+					return false;
+				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "Too many arguments!");
-				return false;
+				sender.sendMessage(ChatColor.RED + "You have insufficuent permissions to use that command!");
+				return true;
 			}
 		} else {
-			System.out.println("[Ping] It is recommended that only players use the ping command.");
+			System.out.print("[Ping] It is reccomended that only players use this command!");
 			return true;
 		}
 	}
-	
-	public void pingGetter(CommandSender sender, Player playerSender, Player selectedPlayer, String arg) {
+
+	private void getPing(CommandSender sender, Command command, String label, String[] args, Player playerSender, Player selectedPlayer) {
 		int ping = ((CraftPlayer) selectedPlayer).getHandle().ping;
-		if(playerSender == selectedPlayer) {
-			sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
-		} else {
-			if(ping != 0) {
-				sender.sendMessage("The ping of " + selectedPlayer.getName() + " is " + String.valueOf(ping) + "ms.");
-			} else {
-				sender.sendMessage(ChatColor.RED + "Could not find player \"" + arg + "\".");
-			}
-		}
+		sender.sendMessage(String.valueOf(ping));
 	}
 }
