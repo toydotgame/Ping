@@ -1,5 +1,6 @@
 package io.github.toydotgame.Ping;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,11 +51,16 @@ public class Main extends JavaPlugin implements CommandExecutor {
 	}
 
 	private void getPing(CommandSender sender, Command command, String label, String[] args, Player playerSender, Player selectedPlayer) {
-		int ping = ((CraftPlayer) selectedPlayer).getHandle().ping;
-		if(selectedPlayer == playerSender) {
-			sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
-		} else {
-			sender.sendMessage("The ping of " + args[0] + " is " + String.valueOf(ping) + "ms.");
-		}
+		Thread getPingThread = new Thread() {
+			public void run() {
+				int ping = ((CraftPlayer) selectedPlayer).getHandle().ping;
+				if(selectedPlayer == playerSender) {
+					sender.sendMessage("Your ping is " + String.valueOf(ping) + "ms.");
+				} else {
+					sender.sendMessage("The ping of " + args[0] + " is " + String.valueOf(ping) + "ms.");
+				}
+			}
+		};
+		getPingThread.start();
 	}
 }
