@@ -1,6 +1,6 @@
 name: Ping
 main: io.github.toydotgame.Ping.Main
-version: 0.1
+version: 1.0
 description: An optimised plugin to get one's ping.
 author: toydotgame
 prefix: Ping
